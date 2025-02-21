@@ -42,8 +42,22 @@
                 threshold = 5000;
               };
               style = "plain";
-              template = "{{ .FormattedMs }}";
+              template = "{{ .FormattedMs }} ";
               type = "executiontime";
+            }
+            {
+              type = "status";
+              style = "diamond";
+              foreground = "#ffffff";
+              background = "#00897b";
+              background_templates = [
+                "{{ if .Error }}#e91e63{{ end }}"
+              ];
+              # trailing_diamond = "";
+              # template = "<#193549></>  ";
+              properties = {
+                always_enabled = true;
+              };
             }
           ];
           type = "rprompt";
@@ -55,7 +69,7 @@
             {
               background = "transparent";
               foreground_templates = [
-                "{{if gt .Code 0}}red{{end}}"
+                "{{if gt .Code 0}}#e91e63{{end}}"
                 "{{if eq .Code 0}}magenta{{end}}"
               ];
               style = "plain";

@@ -5,8 +5,9 @@
     autosuggestion.enable = true;
     enableCompletion = true;
     completionInit = ''
-      autoload -Uz compinit && compinit
-      zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+      autoload -Uz +X compinit && compinit
+      autoload -Uz +X bashcompinit && bashcompinit
+      source /etc/bash_completion.d/*
     '';
     initExtra = ''
       bindkey  "^[[H"   beginning-of-line
@@ -37,6 +38,12 @@
       bindkey '^[[1;5D' backward-word              # C-Left
       bindkey '^[0d'    backward-word              # C-Left
       bindkey '^[[5D'   backward-word              # C-Left
+
+      export PYENV_ROOT="$HOME/.pyenv"
+      [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+      eval "$(pyenv init - zsh)"
+
+      # if [ ! -z "$SSH_CLIENT" ]; then sodu; fi
     '';
     shellAliases = {
       ls = "lsd";
@@ -52,6 +59,8 @@
       l = "ls -CF";
 
       gcr = "git clone --recursive";
+
+      sudo = "sudo -E";
     };
     history.extended = true;
 
@@ -72,6 +81,8 @@
     enable = true;
     enableZshIntegration = true;
   };
+
+  # programs.oh-my-posh.enableZshIntegration = true;
 
   programs.zoxide = {
     enable = true;

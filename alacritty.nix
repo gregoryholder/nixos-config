@@ -1,7 +1,7 @@
 { ... }:
 {
   programs.alacritty = {
-    enable = true;
+    # enable = true;
 
     settings = {
       font = {
@@ -11,26 +11,22 @@
         enabled = [
           {
             command = {
-              args = [ "--goto" ];
               program = "code";
+              args = [ "--goto" ];
             };
-            mouse = {
-              enabled = true;
-            };
+            mouse.enabled = true;
             post_processing = true;
-            regex = "[a-zA-Z/\\-_\\.]+(:\\d+)(:\\d*)?";
+            regex = "[a-zA-Z/\\\\-_\\\\.]+(:\\\\d+)(:\\\\d*)?";
           }
         ];
       };
-      keyboard = {
-        bindings = [
-          {
-            chars = "";
-            key = "Back";
-            mods = "Control";
-          }
-        ];
-      };
+      keyboard.bindings = [
+        {
+          chars = "";
+          key = "Back";
+          mods = "Control";
+        }
+      ];
     };
   };
 }

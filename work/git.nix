@@ -11,7 +11,18 @@
       };
       "http \"http://ach-gitlab\"".proxy = "";
       pull.rebase = true;
-      push.autoSetupRemote = true;
+      push = {
+        autoSetupRemote = true;
+        recurseSubmodules = "check";
+      };
+      lfs.cachecredentials = true;
+      "filter \"lfs\"" = {
+        process = "git-lfs filter-process";
+        required = "true";
+        clean = "git-lfs clean -- %f";
+        smudge = "git-lfs smudge -- %f";
+      };
+      merge.conflictstyle = "zdiff3";
     };
   };
 }
