@@ -44,6 +44,9 @@
       eval "$(pyenv init - zsh)"
 
       # if [ ! -z "$SSH_CLIENT" ]; then sodu; fi
+
+      setopt AUTO_PUSHD
+
     '';
     shellAliases = {
       ls = "lsd";

@@ -92,7 +92,7 @@
   #  /etc/profiles/per-user/gregory/etc/profile.d/hm-session-vars.sh
   #
   home.sessionVariables = {
-    EDITOR = "hx";
+    # EDITOR = "nvim";
   };
 
   home.sessionPath = [ ];
