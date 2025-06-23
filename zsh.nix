@@ -49,19 +49,24 @@
 
     '';
     shellAliases = {
-      ls = "lsd";
+      ls = "lsd -F --hyperlink auto";
       dir = "dir --color=auto";
       vdir = "vdir --color=auto";
       grep = "grep --color=auto";
       fgrep = "fgrep --color=auto";
       egrep = "egrep --color=auto";
 
-      ll = "ls -alF";
+      ll = "ls -alhg";
       la = "ls -A";
       lsa = "ls -A";
       l = "ls -CF";
 
       gcr = "git clone --recursive";
+      gs = "git status";
+      gp = "git push --force-with-lease";
+      gaa = "git commit -a --no-verify --amend --no-edit";
+      unfuck = "git submodule deinit -f . && git submodule update --init && git add .";
+      nvim_main = "nvr -s";
 
       sudo = "sudo -E";
     };
