@@ -65,7 +65,6 @@
       gs = "git status";
       gp = "git push --force-with-lease";
       gaa = "git commit -a --no-verify --amend --no-edit";
-      unfuck = "git submodule deinit -f . && git submodule update --init && git add .";
       nvim_main = "nvr -s";
 
       sudo = "sudo -E";

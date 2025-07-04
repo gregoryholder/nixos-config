@@ -18,4 +18,9 @@
     CCACHE_DEPEND = "true";
     ZELLIJ_AUTO_EXIT = "true";
   };
+
+  programs.zsh.shellAliases = {
+      unfuck = "git submodule deinit -f . && git submodule update --init && git add .";
+      tae = "./Navineo.py tests automatiques vehicule";
+    };
 }
