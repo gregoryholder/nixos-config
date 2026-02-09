@@ -131,7 +131,7 @@ return {
   },
 
   font = wezterm.font 'FiraCode Nerd Font Mono',
-  font_size = 8.5,
+  font_size = 6,
 
   initial_cols = 120,
   initial_rows = 48,
@@ -147,6 +147,6 @@ return {
     inactive_titlebar_bg = '#3C3836',
   },
 
-  color_scheme = 'Catppuccin Mocha',
-  scrollback_lines = 10000
+  color_scheme = 'Raycast_Dark',
+  scrollback_lines = 10000,
 }

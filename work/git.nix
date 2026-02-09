@@ -1,10 +1,14 @@
 { ... }:
 {
   programs.git = {
-    enable = true;
+    enable = false;
+    aliases = {
+      pick = "cherry-pick -x";
+    };
     userName = "Gregory Holder";
     userEmail = "gregory.holder@equans.com";
     extraConfig = {
+      diff.tool = "bc";
       http = {
         proxy = "http://ach-download-pc:5865";
         postBuffer = "524288000";
