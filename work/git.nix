@@ -1,13 +1,14 @@
 { ... }:
 {
   programs.git = {
-    enable = false;
-    aliases = {
-      pick = "cherry-pick -x";
-    };
-    userName = "Gregory Holder";
-    userEmail = "gregory.holder@equans.com";
-    extraConfig = {
+    enable = true;
+    settings = {
+      alias = {
+        pick = "cherry-pick -x";
+        rinse = "!git submodule foreach --recursive git clean -xfd && git submodule sync --recursive && git restore . --recurse-submodules";
+      };
+      user.name = "Gregory Holder";
+      user.email = "gregory.holder@equans.com";
       diff.tool = "bc";
       http = {
         proxy = "http://ach-download-pc:5865";
@@ -27,6 +28,9 @@
         smudge = "git-lfs smudge -- %f";
       };
       merge.conflictstyle = "zdiff3";
+      core = {
+        editor = "nvim";
+      };
     };
   };
 }
