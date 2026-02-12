@@ -1,6 +1,6 @@
 { ... }:
 {
-  imports = [./git.nix ./delta.nix];
+  imports = [./git.nix ./delta.nix ./git-absorb.nix];
 
   home.username = "dev";
   home.homeDirectory = "/home/dev";
