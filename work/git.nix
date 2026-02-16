@@ -31,6 +31,7 @@
       core = {
         editor = "nvim";
       };
+      submodule.recurse = "true";
     };
   };
 }
