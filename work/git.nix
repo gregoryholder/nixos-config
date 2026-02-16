@@ -32,6 +32,12 @@
         editor = "nvim";
       };
       submodule.recurse = "true";
+      url."ssh://git@ach-gitlab/" = {
+        insteadOf = "http://ach-gitlab/";
+      };
+      url."ssh://git@systrans-gitlab.appli-services.com/" = {
+        insteadOf = "https://systrans-gitlab.appli-services.com/";
+      };
     };
   };
 }
