@@ -19,23 +19,15 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+
+      mkHomeConfig = name: {
+        "${name}" = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [ ./home.nix ./${name} ];
+        };
+      };
     in
     {
-      homeConfigurations."gregory" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-
-        # Specify your home configuration modules here, for example,
-        # the path to your home.nix.
-        modules = [ ./home.nix ./home];
-
-        # Optionally use extraSpecialArgs
-        # to pass through arguments to home.nix
-      };
-
-      homeConfigurations."work" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-
-        modules = [ ./home.nix ./work];
-      };
+      homeConfigurations = mkHomeConfig "home" // mkHomeConfig "work";
     };
 }

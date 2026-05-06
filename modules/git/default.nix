@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
   programs.git = {
     enable = true;
@@ -11,7 +11,6 @@
       user.email = "gregory.holder@equans.com";
       diff.tool = "bc";
       http = {
-        # proxy = "http://ach-download-pc:5865";
         proxy = "http://localhost:5865";
         postBuffer = "524288000";
       };
@@ -28,21 +27,26 @@
         clean = "git-lfs clean -- %f";
         smudge = "git-lfs smudge -- %f";
       };
-      # merge.conflictstyle = "zdiff3";
       merge.tool = "bc";
-      # mergetool."meld" = {
-      #   cmd = ''meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"'';
-      # };
       core = {
         editor = "nvim";
       };
-      # submodule.recurse = "true";
-      # url."ssh://git@ach-gitlab/" = {
-      #   insteadOf = "http://ach-gitlab/";
-      # };
-      # url."ssh://git@systrans-gitlab.appli-services.com/" = {
-      #   insteadOf = "https://systrans-gitlab.appli-services.com/";
-      # };
+      # Delta diff viewer settings
+      delta = {
+        features = "zebra-dark";
+        line-numbers = "true";
+      };
+      # Git-absorb settings
+      absorb.autoStageIfNothingStaged = true;
     };
   };
+
+  programs.delta = {
+    enable = true;
+  };
+
+  # Git-related tools
+  home.packages = [
+    pkgs.git-absorb
+  ];
 }
