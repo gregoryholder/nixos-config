@@ -8,8 +8,9 @@
 
 {
   imports = [
-    ./common
-    ./modules/packages.nix
+    ./config-programs
+    ./config-features
+    ./lib/default.nix
   ];
 
   programs = {

@@ -1,9 +1,7 @@
 { config, currentUsername, ... }:
 {
   imports = [
-    ../modules/git
-    ../modules/proxy
-    ../modules/build-tools
+    ../config-features/dev-env
   ];
 
   # Use the username passed from flake
