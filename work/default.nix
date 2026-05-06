@@ -1,4 +1,4 @@
-{ ... }:
+{ config, currentUsername, ... }:
 {
   imports = [
     ../modules/git
@@ -6,8 +6,10 @@
     ../modules/build-tools
   ];
 
-  home.username = "dev";
-  home.homeDirectory = "/home/dev";
+  # Use the username passed from flake
+  # This makes the configuration portable across different systems/usernames
+  home.username = currentUsername;
+  home.homeDirectory = "/home/${currentUsername}";
 
   services.ssh-agent = {
     enable = true;

@@ -14,20 +14,24 @@
     {
       nixpkgs,
       home-manager,
+      self,
       ...
     }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
 
-      mkHomeConfig = name: {
+      mkHomeConfig = name: username: {
         "${name}" = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
+          extraSpecialArgs = { currentUsername = username; };
           modules = [ ./home.nix ./${name} ];
         };
       };
     in
     {
-      homeConfigurations = mkHomeConfig "home" // mkHomeConfig "work";
+      homeConfigurations = 
+        mkHomeConfig "home" "gregory" // 
+        mkHomeConfig "work" "dev";
     };
 }
