@@ -6,7 +6,7 @@
   };
 
   programs.git.settings = {
-    core.pager = "delta";
+    core.pager = "less --mouse";
     delta = {
       features = "zebra-dark";
       line-numbers = "true";

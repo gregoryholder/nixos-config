@@ -41,8 +41,6 @@
     pkgs.vlc
     pkgs.nmap
     pkgs.lsd
-    # pkgs.nodejs_20
-    # pkgs.nodePackages.xtermjs
     pkgs.ripgrep
     pkgs.bat
 

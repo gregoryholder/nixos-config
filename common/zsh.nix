@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   programs.zsh = {
     enable = true;
@@ -12,6 +12,7 @@
       source /etc/bash_completion.d/*
     '';
     initExtra = ''
+      # zmodload zsh/zprof
       bindkey  "^[[H"   beginning-of-line
 
       bindkey  "^[[F"   end-of-line
@@ -45,6 +46,10 @@
       [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
       eval "$(pyenv init - zsh)"
 
+      export NVM_DIR="$HOME/.nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use  # This loads nvm
+      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
       # if [ ! -z "$SSH_CLIENT" ]; then sodu; fi
 
       setopt AUTO_PUSHD
@@ -59,6 +64,12 @@
           builtin cd "$@"
         fi
       }
+      # exec ssh-agent $BASH -s 10<&0 << EOF
+      #   ssh-add ~/.ssh/your_key1.rsa \
+      #           ~/.ssh/your_key2.rsa &> /dev/null
+      #   exec $BASH <&10-
+      # EOF
+      # zprof
 
       '';
     shellAliases = {
@@ -74,7 +85,7 @@
       lsa = "ls -A";
       l   = "ls -CF";
 
-      gs  = "git status";
+      # gs  = "git status";
       gp  = "git push --force-with-lease";
       gaa = "git commit -a --no-verify --amend --no-edit";
       gr  = "cd $(git rev-parse --show-toplevel)";
@@ -84,6 +95,10 @@
       sudo = "sudo -E";
 
       pick = "git cherry-pick -x";
+
+      rga = "rga -g '!~$*' -g '!*.zip' -g '!*.tar'";
+
+      comp_lint = ''bcompare WarningsCpplint_merge-base.txt WarningsCpplint.txt -title1="Cpplint [Merge base]" -title2="Cpplint [Current]"'';
     };
     history.extended = true;
 
@@ -107,6 +122,15 @@
           sha256 = "1b4pksrc573aklk71dn2zikiymsvq19bgvamrdffpf7azpq6kxl2";
         };
       }
+      # {
+      #     name = "zsh-yarn-autocompletions";
+      #     src = pkgs.fetchFromGitHub {
+      #       owner = "g-plane";
+      #       repo = "zsh-yarn-autocompletions";
+      #       rev = "92f9f071f584be902790bb50d19c4d1803b57684";
+      #       sha256 = lib.fakeSha256;
+      #     };
+      # }
       {
           name = "zsh-prompt-benchmark";
           src = pkgs.fetchFromGitHub {
@@ -124,6 +148,11 @@
     ];
   };
 
+  programs.vivid = {
+    enable = true;
+    activeTheme = "molokai";
+  };
+
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
@@ -138,5 +167,5 @@
 
   programs.alacritty.settings.terminal.shell.program = "zsh";
 
-  
+  services.ssh-agent.enableZshIntegration = true;
 }
