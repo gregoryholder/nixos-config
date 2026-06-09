@@ -86,6 +86,10 @@ return {
   },
 
   keys = {
+    {key="E", mods="CTRL", action=wezterm.action_callback(function(window, pane)
+      local ansi = window:get_selection_escapes_for_pane(pane);
+      window:copy_to_clipboard(ansi)
+    end)},
     -- Modal resizing
     { key = 'r', mods = 'LEADER', action = set_mode('resize_mode')},
     { key = 't', mods = 'LEADER', action = set_mode('tab_mode') },
@@ -94,12 +98,22 @@ return {
     { key = 'n', mods = 'ALT|SHIFT', action = wezterm.action_callback(smart_split) },
 
     -- Split panes manually
-    { key = 'd', mods = 'ALT|SHIFT', action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' } },
+    { key = 'v', mods = 'ALT|SHIFT', action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' } },
     { key = 's', mods = 'ALT|SHIFT', action = wezterm.action.SplitVertical { domain = 'CurrentPaneDomain' } },
+    { key = 'x', mods = 'ALT|SHIFT', action = wezterm.action_callback(function(window, pane)
+      if #window:active_tab():panes() == 2 then
+        window:perform_action(wezterm.action.RotatePanes("Clockwise"), pane)
+      else
+        window:perform_action(wezterm.action.PaneSelect { mode = 'SwapWithActive' }, pane)
+      end
+    end) },
+
 
     -- Navigate between panes
     { key = 'h', mods = 'ALT|SHIFT', action = wezterm.action.ActivatePaneDirection 'Left' },
     { key = 'l', mods = 'ALT|SHIFT', action = wezterm.action.ActivatePaneDirection 'Right' },
+    { key = 'h', mods = 'ALT', action = wezterm.action.ActivatePaneDirection 'Left' },
+    { key = 'l', mods = 'ALT', action = wezterm.action.ActivatePaneDirection 'Right' },
     { key = 'k', mods = 'ALT|SHIFT', action = wezterm.action.ActivatePaneDirection 'Up' },
     { key = 'j', mods = 'ALT|SHIFT', action = wezterm.action.ActivatePaneDirection 'Down' },
     { key = 'd', mods = 'ALT|SHIFT', action = wezterm.action.CloseCurrentPane {confirm = false} },
@@ -108,8 +122,8 @@ return {
     { key = 'l', mods = 'CTRL|ALT|SHIFT', action = wezterm.action.ActivateTabRelative (1) },
 
     -- Tab management
-    { key = 't', mods = 'ALT', action = wezterm.action.SpawnTab 'CurrentPaneDomain' },
-    { key = 'w', mods = 'ALT', action = wezterm.action.CloseCurrentTab { confirm = true } },
+    { key = 't', mods = 'ALT|SHIFT', action = wezterm.action.SpawnTab 'CurrentPaneDomain' },
+    -- { key = 'w', mods = 'ALT', action = wezterm.action.CloseCurrentTab { confirm = true } },
 
     -- Toggle full screen
     { key = 'f', mods = 'ALT|SHIFT', action = wezterm.action.ToggleFullScreen },
@@ -131,10 +145,10 @@ return {
   },
 
   font = wezterm.font 'FiraCode Nerd Font Mono',
-  font_size = 6,
+  font_size = 7.5,
 
-  initial_cols = 120,
-  initial_rows = 48,
+  initial_cols = 140,
+  initial_rows = 60,
 
   -- Visual distinction between active and inactive panes
   inactive_pane_hsb = {
@@ -147,6 +161,11 @@ return {
     inactive_titlebar_bg = '#3C3836',
   },
 
-  color_scheme = 'Raycast_Dark',
-  scrollback_lines = 10000,
+  -- color_scheme = 'Catppuccin Mocha',
+  -- color_scheme = 'Calamity',
+  color_scheme = 'zenwritten_dark',
+  -- color_scheme = 'rose-pine',
+  scrollback_lines = 100000,
+
+  term = 'wezterm',
 }

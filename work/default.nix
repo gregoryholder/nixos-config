@@ -4,6 +4,10 @@
     ../config-features/dev-env
   ];
 
+  # On non-NixOS, this helps GUI apps (including WezTerm launched from desktop entries)
+  # receive Home Manager environment/session wiring.
+  targets.genericLinux.enable = true;
+
   # Use the username passed from flake
   # This makes the configuration portable across different systems/usernames
   home.username = currentUsername;

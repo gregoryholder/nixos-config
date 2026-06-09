@@ -1,7 +1,13 @@
-{...}:
+{ pkgs, ... }:
+let
+  weztermWithNixGL = pkgs.writeShellScriptBin "wezterm" ''
+    exec ${pkgs.nixgl.nixGLIntel}/bin/nixGLIntel ${pkgs.wezterm}/bin/wezterm "$@"
+  '';
+in
 {
-  programs.wezterm = {
-    # enable = true;
-    extraConfig = builtins.readFile ./wezterm.lua;
-  };
+  xdg.configFile."wezterm/wezterm.lua".source = ./wezterm.lua;
+
+  home.packages = [
+    weztermWithNixGL
+  ];
 }
