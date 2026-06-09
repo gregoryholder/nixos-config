@@ -30,6 +30,7 @@
       merge.tool = "bc";
       merge.conflictStyle = "zdiff3";
       core = {
+        commentchar=";";
         editor = "nvim";
       };
       # Delta diff viewer settings
