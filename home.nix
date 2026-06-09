@@ -16,7 +16,16 @@
   programs = {
     nh.enable = true;
 
-    lazygit.enable = true;
+    lazygit = {
+      enable = true;
+      settings = {
+        os = {
+          edit = "nvr --servername \"$NVIM_LISTEN_ADDRESS\" --remote-tab \"{{filename}}\"";
+          editAtLine = "nvr --servername \"$NVIM_LISTEN_ADDRESS\" --remote-tab +\"{{line}}\" \"{{filename}}\"";
+          editAtLineAndWait = "nvr --servername \"$NVIM_LISTEN_ADDRESS\" --remote-wait +\"{{line}}\" \"{{filename}}\"";
+        };
+      };
+    };
     bottom.enable = true;
 
     gh.enable = true;
@@ -57,7 +66,7 @@
   #  /etc/profiles/per-user/gregory/etc/profile.d/hm-session-vars.sh
   #
   home.sessionVariables = {
-    # EDITOR = "nvim";
+    EDITOR = "nvim";
   };
 
   home.sessionPath = [ ];
