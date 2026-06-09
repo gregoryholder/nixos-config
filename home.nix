@@ -5,7 +5,6 @@
   currentUsername,
   ...
 }:
-
 {
   imports = [
     ./config-programs
@@ -20,9 +19,11 @@
       enable = true;
       settings = {
         os = {
-          edit = "nvr --servername \"$NVIM_LISTEN_ADDRESS\" --remote-tab \"{{filename}}\"";
-          editAtLine = "nvr --servername \"$NVIM_LISTEN_ADDRESS\" --remote-tab +\"{{line}}\" \"{{filename}}\"";
-          editAtLineAndWait = "nvr --servername \"$NVIM_LISTEN_ADDRESS\" --remote-wait +\"{{line}}\" \"{{filename}}\"";
+          edit = "lazygit-nvr-open \"{{filename}}\"";
+          editAtLine = "lazygit-nvr-open \"{{filename}}\" \"{{line}}\"";
+          openDirInEditor = "lazygit-nvr-open \"{{dir}}\"";
+          editInTerminal = false;
+          # editAtLineAndWait = "nvr --servername \"$NVIM_LISTEN_ADDRESS\" --remote-wait +\"{{line}}\" \"{{filename}}\"";
         };
       };
     };
