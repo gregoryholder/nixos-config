@@ -28,6 +28,7 @@
         smudge = "git-lfs smudge -- %f";
       };
       merge.tool = "bc";
+      merge.conflictStyle = "zdiff3";
       core = {
         editor = "nvim";
       };
