@@ -3,9 +3,9 @@ function __wezterm_tab_nvim_socket() {
   [[ -n "$WEZTERM_PANE" ]] || return 1
 
   local tab_id
-  local script_dir="${${(%):-%N}:A:h}"
+  # Nix replaces this placeholder with the store path of the Python helper.
   tab_id="$(
-    wezterm cli list --format json 2>/dev/null | python3 "$script_dir/wezterm-tab-id.py"
+    wezterm cli list --format json 2>/dev/null | python3 __WEZTERM_TAB_ID__
   )"
 
   [[ -n "$tab_id" ]] || return 1
