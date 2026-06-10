@@ -13,8 +13,16 @@ function __wezterm_tab_nvim_socket() {
 }
 
 function __set_wezterm_tab_nvim_env() {
+  # Avoid running wezterm/python on every prompt by caching per pane.
+  if [[ -n "$__WEZTERM_TAB_NVIM_SOCKET" && "$__WEZTERM_TAB_NVIM_PANE" == "$WEZTERM_PANE" ]]; then
+    export NVIM_LISTEN_ADDRESS="$__WEZTERM_TAB_NVIM_SOCKET"
+    return 0
+  fi
+
   local sock
   sock="$(__wezterm_tab_nvim_socket)" || return 0
+  export __WEZTERM_TAB_NVIM_SOCKET="$sock"
+  export __WEZTERM_TAB_NVIM_PANE="$WEZTERM_PANE"
   export NVIM_LISTEN_ADDRESS="$sock"
 }
 
