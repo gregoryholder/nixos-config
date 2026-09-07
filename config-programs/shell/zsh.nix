@@ -16,10 +16,12 @@
       fi
     '';
     initExtra = lib.mkAfter ''
+      PATH="/home/dev/.yarn/bin:$PATH"
       if [[ -n "$ZSH_PROFILE_STARTUP" ]]; then
         zprof
       fi
     '';
+
     enableCompletion = true;
     completionInit = ''
       FPATH="$HOME/.docker/completions:$FPATH"
