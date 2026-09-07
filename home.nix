@@ -67,7 +67,7 @@
   #  /etc/profiles/per-user/gregory/etc/profile.d/hm-session-vars.sh
   #
   home.sessionVariables = {
-    EDITOR = "nvim";
+    EDITOR = "nvim --listen 'nothing'";
   };
 
   home.sessionPath = [ ];
