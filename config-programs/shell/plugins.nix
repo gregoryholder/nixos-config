@@ -19,5 +19,14 @@
         sha256 = "sha256-rQt0/sdb+z9h86ca4H3/10tYmL1ILH+eiHYg6+R6sMk=";
       };
     }
+    {
+      name = "zsh-yarn-completions";
+      src = pkgs.fetchFromGitHub {
+        owner = "chrisands";
+        repo = "zsh-yarn-completions";
+        rev = "1ddb8ea6209b7c4a55b9accaea5460bec27ec8a7";
+        sha256 = "sha256-S8NPSI0ItL/AmU+O8/KYqhv5HZ+F1j8Tg3sqOSEzXok=";
+      };
+    }
   ];
 }
