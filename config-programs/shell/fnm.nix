@@ -1,7 +1,11 @@
-{ ... }:
+{ pkgs, ... }:
 {
-  programs.fnm = {
-    enable = true;
-    enableZshIntegration = true;
-  };
+  home.packages = with pkgs; [
+    fnm
+  ];
+
+  programs.zsh.initExtra = ''
+    eval "$(fnm env --shell zsh)"
+  '';
 }
+
