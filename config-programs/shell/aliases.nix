@@ -21,6 +21,9 @@
     gr  = "cd $(git rev-parse --show-toplevel)";
     pick = "git cherry-pick -x";
 
+    # Node.js
+    node8 = "fnm exec --using=v8.17.0 node";
+
     # Other utilities
     nvim_main = "nvr -s";
     sudo = "sudo -E";
