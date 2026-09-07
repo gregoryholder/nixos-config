@@ -3,23 +3,28 @@
   programs.git = {
     enable = true;
     settings = {
+      absorb.autoStageIfNothingStaged = true;
+      advice.statusHints = false;
       alias = {
         pick = "cherry-pick -x";
         rinse = "!git submodule foreach --recursive git clean -xfd && git submodule sync --recursive && git restore . --recurse-submodules";
       };
-      user.name = "Gregory Holder";
-      user.email = "gregory.holder@equans.com";
+      core = {
+        commentchar=";";
+        # pager = "less -LRc --mouse";
+        pager = "less --mouse";
+      };
+      # Delta diff viewer settings
+      delta = {
+        features = "zebra-dark";
+        line-numbers = "true";
+      };
       diff.tool = "bc";
       http = {
         proxy = "http://localhost:5865";
         postBuffer = "524288000";
       };
       "http \"http://ach-gitlab\"".proxy = "";
-      pull.rebase = true;
-      push = {
-        autoSetupRemote = true;
-        recurseSubmodules = "check";
-      };
       lfs.cachecredentials = true;
       "filter \"lfs\"" = {
         process = "git-lfs filter-process";
@@ -29,17 +34,13 @@
       };
       merge.tool = "bc";
       merge.conflictStyle = "zdiff3";
-      core = {
-        commentchar=";";
-        editor = "nvim";
+      pull.rebase = true;
+      push = {
+        autoSetupRemote = true;
+        recurseSubmodules = "check";
       };
-      # Delta diff viewer settings
-      delta = {
-        features = "zebra-dark";
-        line-numbers = "true";
-      };
-      # Git-absorb settings
-      absorb.autoStageIfNothingStaged = true;
+      user.name = "Gregory Holder";
+      user.email = "gregory.holder@equans.com";
     };
   };
 
