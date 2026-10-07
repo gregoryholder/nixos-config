@@ -6,6 +6,7 @@
 
   programs.zsh.initExtra = ''
     eval "$(fnm env --shell zsh)"
+    eval "$(fnm completions --shell zsh)"
   '';
 }
 
