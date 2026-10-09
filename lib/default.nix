@@ -3,7 +3,7 @@
   home.packages = [
     # Nix tools
     pkgs.nil
-    pkgs.nixfmt-rfc-style
+    pkgs.nixfmt
 
     # Media
     pkgs.vlc
