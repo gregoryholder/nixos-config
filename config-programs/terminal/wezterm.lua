@@ -112,8 +112,8 @@ return {
     -- Navigate between panes
     { key = 'h', mods = 'ALT|SHIFT', action = wezterm.action.ActivatePaneDirection 'Left' },
     { key = 'l', mods = 'ALT|SHIFT', action = wezterm.action.ActivatePaneDirection 'Right' },
-    { key = 'h', mods = 'ALT', action = wezterm.action.ActivatePaneDirection 'Left' },
-    { key = 'l', mods = 'ALT', action = wezterm.action.ActivatePaneDirection 'Right' },
+    -- { key = 'h', mods = 'ALT', action = wezterm.action.ActivatePaneDirection 'Left' },
+    -- { key = 'l', mods = 'ALT', action = wezterm.action.ActivatePaneDirection 'Right' },
     { key = 'k', mods = 'ALT|SHIFT', action = wezterm.action.ActivatePaneDirection 'Up' },
     { key = 'j', mods = 'ALT|SHIFT', action = wezterm.action.ActivatePaneDirection 'Down' },
     { key = 'd', mods = 'ALT|SHIFT', action = wezterm.action.CloseCurrentPane {confirm = false} },
