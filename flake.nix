@@ -33,6 +33,30 @@
               '';
             };
           })
+          (
+            final: prev:
+            let
+              kittySource = prev.fetchFromGitHub {
+                owner = "kovidgoyal";
+                repo = "kitty";
+                tag = "v0.50.0";
+                hash = "sha256-CSSjL931OLZ9wwz9E3rAfMcm+TpczVJzJh9MPfuKmVU=";
+              };
+            in
+            {
+              kitty = prev.kitty.overrideAttrs (old: {
+                version = "0.50.0";
+                src = kittySource;
+                goModules =
+                  (prev.buildGo126Module {
+                    pname = "kitty-go-modules";
+                    version = "0.50.0";
+                    src = kittySource;
+                    vendorHash = "sha256-Oo5ehjdq4HcTxZcKi/rwz8dDZYGxdSS8cqIkbdLBrb8=";
+                  }).goModules;
+              });
+            }
+          )
         ];
       };
 
