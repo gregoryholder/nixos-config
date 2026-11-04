@@ -8,7 +8,7 @@ let
   );
 in
 {
-  programs.zsh.initExtra = ''
+  programs.zsh.initContent = ''
     source ${weztermNvimSocketScript}
   '';
 }

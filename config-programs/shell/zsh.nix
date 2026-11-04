@@ -10,17 +10,19 @@
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;
-    initExtraFirst = ''
-      if [[ -n "$ZSH_PROFILE_STARTUP" ]]; then
-        zmodload zsh/zprof
-      fi
-    '';
-    initExtra = lib.mkAfter ''
-      PATH="/home/dev/.yarn/bin:$PATH"
-      if [[ -n "$ZSH_PROFILE_STARTUP" ]]; then
-        zprof
-      fi
-    '';
+    initContent = lib.mkMerge [
+      (lib.mkBefore ''
+        if [[ -n "$ZSH_PROFILE_STARTUP" ]]; then
+          zmodload zsh/zprof
+        fi
+      '')
+      (lib.mkAfter ''
+        PATH="/home/dev/.yarn/bin:$PATH"
+        if [[ -n "$ZSH_PROFILE_STARTUP" ]]; then
+          zprof
+        fi
+      '')
+    ];
 
     enableCompletion = true;
     completionInit = ''
@@ -50,5 +52,4 @@
   };
 
   programs.alacritty.settings.terminal.shell.program = "zsh";
-  services.ssh-agent.enableZshIntegration = true;
 }

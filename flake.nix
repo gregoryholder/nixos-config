@@ -23,13 +23,25 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [ nixgl.overlay ];
+        overlays = [
+          nixgl.overlays.default
+          (final: prev: {
+            nixgl = prev.nixgl.override {
+              # nixGL still invokes pcregrep, which was replaced by pcre2grep.
+              pcre = final.writeShellScriptBin "pcregrep" ''
+                exec ${final.pcre2}/bin/pcre2grep "$@"
+              '';
+            };
+          })
+        ];
       };
 
       mkHomeConfig = name: username: {
         "${name}" = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
-          extraSpecialArgs = { currentUsername = username; };
+          extraSpecialArgs = {
+            currentUsername = username;
+          };
           modules = [ ./home.nix ./${name} ];
         };
       };

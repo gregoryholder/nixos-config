@@ -4,9 +4,8 @@
     fnm
   ];
 
-  programs.zsh.initExtra = ''
+  programs.zsh.initContent = ''
     eval "$(fnm env --shell zsh)"
     eval "$(fnm completions --shell zsh)"
   '';
 }
-
