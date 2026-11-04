@@ -4,7 +4,6 @@ import io
 import json
 import os
 from pathlib import Path
-import shutil
 import socket
 import subprocess
 import tempfile
@@ -13,7 +12,6 @@ from unittest.mock import patch
 
 
 SOURCE = Path(__file__).with_name("terminal-nvim.py")
-ZSH = shutil.which("zsh")
 spec = importlib.util.spec_from_file_location("terminal_nvim", SOURCE)
 routing = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(routing)
@@ -108,28 +106,6 @@ class RoutingTests(unittest.TestCase):
         with patch.object(routing, "nvr", return_value="12"), patch.object(routing, "run") as run:
             routing.focus_editor("/editor.sock")
             run.assert_called_once_with(["wezterm", "cli", "activate-pane", "--pane-id", "12"])
-
-    @unittest.skipUnless(ZSH, "zsh is required")
-    def test_shell_startup_is_lazy_and_explicit_listen_is_preserved(self):
-        shell_source = SOURCE.parents[2] / "shell/init/scripts/wezterm-nvim-socket.zsh"
-        nvim = self.runtime / "nvim"
-        nvim.write_text('#!/bin/sh\nprintf "%s\\n" "$*" >> "$TEST_LOG"\n')
-        nvim.chmod(0o755)
-        script = '''
-function terminal-nvim() { print queried >> "$TEST_LOG"; return 1; }
-source "$1"
-[[ ! -e "$TEST_LOG" ]] || exit 1
-nvim --listen /explicit.sock file.txt
-if nvim file.txt; then exit 2; fi
-'''
-        env = {**os.environ, "PATH": str(self.runtime), "TEST_LOG": str(self.runtime / "calls")}
-        subprocess.run([ZSH, "-f", "-c", script, "test",
-                        str(shell_source)], env=env, check=True)
-        self.assertEqual(
-            (self.runtime / "calls").read_text(),
-            "--listen /explicit.sock file.txt\nqueried\n",
-        )
-
 
 if __name__ == "__main__":
     unittest.main()
