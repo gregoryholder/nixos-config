@@ -14,8 +14,7 @@
       tab_bar_edge = "top";
       tab_bar_style = "powerline";
       tab_powerline_style = "slanted";
-      tab_title_template = "{title}{' :{}:'.format(num_windows) if num_windows > 1 else ''}";
-      
+      tab_title_template = "{custom}";
     };
     keybindings = {
       "alt+shift+n" = "kitten smart_split.py";
@@ -36,6 +35,7 @@
 
   # Split along the visually longer side (in pixels, not cells), matching wezterm's smart_split.
   xdg.configFile."kitty/smart_split.py".source = ./scripts/smart_split.py;
+  xdg.configFile."kitty/tab_bar.py".source = ./scripts/tab_bar.py;
 
   xdg.configFile."kitty/shaders/dim-inactive-windows.pipeline".text = ''
     startgroup
