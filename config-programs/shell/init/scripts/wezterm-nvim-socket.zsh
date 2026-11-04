@@ -1,6 +1,6 @@
 # Use one Neovim socket per WezTerm tab so adjacent panes share the same instance.
 function __wezterm_tab_nvim_socket() {
-  [[ -n "$WEZTERM_PANE" ]] || return 1
+  [[ -n "${WEZTERM_PANE:-}" ]] || return 1
 
   local tab_id
   # Nix replaces this placeholder with the store path of the Python helper.
@@ -12,9 +12,42 @@ function __wezterm_tab_nvim_socket() {
   printf '/tmp/nvim-wezterm-tab-%s.sock\n' "$tab_id"
 }
 
+function __kitty_tab_nvim_socket() {
+  [[ -n "${KITTY_WINDOW_ID:-}" && -n "${KITTY_LISTEN_ON:-}" ]] || return 1
+
+  local tab_id
+  tab_id="$(
+    kitten @ --to "$KITTY_LISTEN_ON" ls | python3 __KITTY_TAB_ID__
+  )" || return 1
+
+  [[ -n "$tab_id" ]] || return 1
+  printf '/tmp/nvim-kitty-tab-%s-%s.sock\n' "$UID" "$tab_id"
+}
+
 function __set_wezterm_tab_nvim_env() {
-  # Avoid running wezterm/python on every prompt by caching per pane.
-  if [[ -n "$__WEZTERM_TAB_NVIM_SOCKET" && "$__WEZTERM_TAB_NVIM_PANE" == "$WEZTERM_PANE" ]]; then
+  if [[ -n "${KITTY_WINDOW_ID:-}" ]]; then
+    if [[ -n "${KITTY_PID:-}" ]]; then
+      local socket="${KITTY_LISTEN_ON:-unix:${XDG_CACHE_HOME:-$HOME/.cache}/kitty.sock}"
+      if [[ -S "${socket#unix:}-$KITTY_PID" ]]; then
+        export KITTY_LISTEN_ON="$socket-$KITTY_PID"
+      fi
+    fi
+
+    if [[ "${__KITTY_TAB_NVIM_WINDOW:-}" == "$KITTY_WINDOW_ID" && -n "${__KITTY_TAB_NVIM_SOCKET:-}" ]]; then
+      export NVIM_LISTEN_ADDRESS="$__KITTY_TAB_NVIM_SOCKET"
+      return 0
+    fi
+
+    local kitty_sock
+    kitty_sock="$(__kitty_tab_nvim_socket)" || return 0
+    export __KITTY_TAB_NVIM_SOCKET="$kitty_sock"
+    export __KITTY_TAB_NVIM_WINDOW="$KITTY_WINDOW_ID"
+    export NVIM_LISTEN_ADDRESS="$kitty_sock"
+    return 0
+  fi
+
+  # Cache the tab socket per pane.
+  if [[ -n "${__WEZTERM_TAB_NVIM_SOCKET:-}" && "${__WEZTERM_TAB_NVIM_PANE:-}" == "${WEZTERM_PANE:-}" ]]; then
     export NVIM_LISTEN_ADDRESS="$__WEZTERM_TAB_NVIM_SOCKET"
     return 0
   fi
@@ -22,7 +55,7 @@ function __set_wezterm_tab_nvim_env() {
   local sock
   sock="$(__wezterm_tab_nvim_socket)" || return 0
   export __WEZTERM_TAB_NVIM_SOCKET="$sock"
-  export __WEZTERM_TAB_NVIM_PANE="$WEZTERM_PANE"
+  export __WEZTERM_TAB_NVIM_PANE="${WEZTERM_PANE:-}"
   export NVIM_LISTEN_ADDRESS="$sock"
 }
 
@@ -49,6 +82,10 @@ function nvim() {
     fi
   done
 
+  if (( ! explicit_listen )); then
+    __set_wezterm_tab_nvim_env
+  fi
+
   if (( explicit_listen )) || [[ -z "$NVIM_LISTEN_ADDRESS" ]]; then
     command nvim "$@"
     return
@@ -62,6 +99,11 @@ function nvim() {
   fi
 }
 
-autoload -Uz add-zsh-hook
-add-zsh-hook precmd __set_wezterm_tab_nvim_env
-__set_wezterm_tab_nvim_env
+function lazygit() {
+  if [[ -n "${NVIM:-}" ]]; then
+    NVIM_LISTEN_ADDRESS="$NVIM" command lazygit "$@"
+  else
+    __set_wezterm_tab_nvim_env
+    command lazygit "$@"
+  fi
+}

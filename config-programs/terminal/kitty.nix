@@ -1,9 +1,14 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
+let
+  kittySocket = "${config.xdg.cacheHome}/kitty.sock";
+in
 {
   programs.kitty = {
     enable = true;
     themeFile = "Catppuccin-Mocha";
     settings = {
+      allow_remote_control = "socket-only";
+      listen_on = "unix:${kittySocket}";
       enabled_layouts = "splits,stack";
       font_size = 8.0;
       font_family = "FiraCode Nerd Font Mono";

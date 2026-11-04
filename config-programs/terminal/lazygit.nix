@@ -1,6 +1,12 @@
 { pkgs, ... }:
 let
-  lazygitNvimOpen = pkgs.writeShellScriptBin "lazygit-nvr-open" (builtins.readFile ./scripts/lazygit-nvr-open.sh);
+  terminalTabId = pkgs.writeText "terminal-tab-id.py" (
+    builtins.readFile ../shell/init/scripts/wezterm-tab-id.py
+  );
+  lazygitNvimOpen = pkgs.writeShellScriptBin "lazygit-nvr-open" (
+    builtins.replaceStrings [ "__TERMINAL_TAB_ID__" ] [ (toString terminalTabId) ]
+      (builtins.readFile ./scripts/lazygit-nvr-open.sh)
+  );
 in
 {
   programs.lazygit = {

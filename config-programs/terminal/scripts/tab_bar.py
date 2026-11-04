@@ -33,5 +33,5 @@ def draw_title(data):
         if common_directory == prefix:
             return replacement 
         if common_directory.startswith(prefix + os.sep):
-            return replacement + "/" + common_directory[len(prefix) + 1:]
+            return replacement + " " + common_directory[len(prefix) + 1:]
     return common_directory
