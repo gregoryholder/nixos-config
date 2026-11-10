@@ -5,6 +5,7 @@ from kitty.fast_data_types import get_boss
 
 PREFIX_REPLACEMENTS = (
     ("/home/dev/workspace/affaires", "🚌"),
+    ("/home/dev/.config", "⚙️"),
     ("/home/dev", "🏠"),
 )
 
