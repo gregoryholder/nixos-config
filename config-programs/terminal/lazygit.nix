@@ -26,9 +26,9 @@ in
     enable = true;
     settings = {
       os = {
-        edit = "lazygit-nvr-open \"{{filename}}\"";
-        editAtLine = "lazygit-nvr-open \"{{filename}}\" \"{{line}}\"";
-        openDirInEditor = "lazygit-nvr-open \"{{dir}}\"";
+        # edit = "lazygit-nvr-open \"{{filename}}\"";
+        # editAtLine = "lazygit-nvr-open \"{{filename}}\" \"{{line}}\"";
+        # openDirInEditor = "lazygit-nvr-open \"{{dir}}\"";
         editInTerminal = false;
         # editAtLineAndWait = "nvr --servername \"$NVIM_LISTEN_ADDRESS\" --remote-wait +\"{{line}}\" \"{{filename}}\"";
       };
