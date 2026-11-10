@@ -16,7 +16,7 @@ def draw_title(data):
 
     directories = []
     for window in tab:
-        cwd = window.get_cwd_of_child()
+        cwd = window.get_cwd_of_root_child() or window.get_cwd_of_child()
         if cwd:
             directories.append(cwd)
 
