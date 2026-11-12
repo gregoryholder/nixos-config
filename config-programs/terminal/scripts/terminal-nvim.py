@@ -138,12 +138,16 @@ def main():
     open_parser = commands.add_parser("open")
     open_parser.add_argument("file")
     open_parser.add_argument("line", nargs="?", type=int)
+    commands.add_parser("lazygit")
     args = parser.parse_args()
     try:
         if args.command == "listen-address":
             address = tab_socket()
             if not is_listening(address):
                 print(address)
+        elif args.command == "lazygit":
+            tab_socket()
+            launch_split(executable("lazygit"))
         else:
             if args.line is not None and args.line < 1:
                 raise RoutingError("line number must be positive")

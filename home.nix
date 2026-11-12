@@ -15,18 +15,6 @@
   programs = {
     nh.enable = true;
 
-    lazygit = {
-      enable = true;
-      settings = {
-        os = {
-          edit = "lazygit-nvr-open \"{{filename}}\"";
-          editAtLine = "lazygit-nvr-open \"{{filename}}\" \"{{line}}\"";
-          openDirInEditor = "lazygit-nvr-open \"{{dir}}\"";
-          editInTerminal = false;
-          # editAtLineAndWait = "nvr --servername \"$NVIM_LISTEN_ADDRESS\" --remote-wait +\"{{line}}\" \"{{filename}}\"";
-        };
-      };
-    };
     bottom.enable = true;
 
     gh.enable = true;

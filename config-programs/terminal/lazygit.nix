@@ -8,6 +8,7 @@ let
     runtimeInputs = [
       pkgs.python3
       pkgs.neovim-remote
+      pkgs.lazygit
       pkgs.kitty
       pkgs.wezterm
     ];
@@ -20,17 +21,21 @@ let
     runtimeInputs = [ terminalNvim ];
     text = builtins.readFile ./scripts/lazygit-nvr-open.sh;
   };
+  lazygitSplit = pkgs.writeShellApplication {
+    name = "lazygit-split";
+    runtimeInputs = [ terminalNvim ];
+    text = "exec terminal-nvim lazygit";
+  };
 in
 {
   programs.lazygit = {
     enable = true;
     settings = {
       os = {
-        # edit = "lazygit-nvr-open \"{{filename}}\"";
-        # editAtLine = "lazygit-nvr-open \"{{filename}}\" \"{{line}}\"";
-        # openDirInEditor = "lazygit-nvr-open \"{{dir}}\"";
+        edit = "lazygit-nvr-open \"{{filename}}\"";
+        editAtLine = "lazygit-nvr-open \"{{filename}}\" \"{{line}}\"";
+        openDirInEditor = "lazygit-nvr-open \"{{dir}}\"";
         editInTerminal = false;
-        # editAtLineAndWait = "nvr --servername \"$NVIM_LISTEN_ADDRESS\" --remote-wait +\"{{line}}\" \"{{filename}}\"";
       };
     };
   };
@@ -38,5 +43,6 @@ in
   home.packages = [
     terminalNvim
     lazygitNvimOpen
+    lazygitSplit
   ];
 }

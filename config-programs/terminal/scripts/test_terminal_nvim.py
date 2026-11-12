@@ -139,6 +139,14 @@ class RoutingTests(unittest.TestCase):
             self.assertEqual(routing.main(), 1)
         self.assertIn("Neovim did not start listening at /tab.sock", stderr.getvalue())
 
+    def test_lazygit_command_launches_in_current_tab(self):
+        with patch("sys.argv", ["terminal-nvim", "lazygit"]), \
+                patch.object(routing, "tab_socket", return_value="/tab.sock"), \
+                patch.object(routing, "executable", return_value="/usr/bin/lazygit"), \
+                patch.object(routing, "launch_split") as launch:
+            self.assertEqual(routing.main(), 0)
+        launch.assert_called_once_with("/usr/bin/lazygit")
+
     def test_wezterm_discovery_and_focus(self):
         os.environ.pop("KITTY_WINDOW_ID")
         os.environ["WEZTERM_PANE"] = "8"
