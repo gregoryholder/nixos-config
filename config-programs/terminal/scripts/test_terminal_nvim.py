@@ -72,6 +72,23 @@ class RoutingTests(unittest.TestCase):
             self.assertEqual(routing.main(), 1)
         self.assertIn("connection refused", stderr.getvalue())
 
+    def test_launch_split_uses_kitty_and_wezterm_current_tab(self):
+        with patch.object(routing, "run") as run:
+            routing.launch_split("lazygit")
+        self.assertEqual(run.call_args.args[0], [
+            "kitten", "@", "--to", "unix:/unused.sock", "launch",
+            "--type=window", "--location=vsplit", "--cwd=current", "lazygit",
+        ])
+
+        os.environ.pop("KITTY_WINDOW_ID")
+        os.environ["WEZTERM_PANE"] = "8"
+        with patch.object(routing, "run") as run:
+            routing.launch_split("nvim", "--listen", "/tab.sock")
+        self.assertEqual(run.call_args.args[0], [
+            "wezterm", "cli", "split-pane", "--right", "--pane-id", "8",
+            "--cwd", os.getcwd(), "--", "nvim", "--listen", "/tab.sock",
+        ])
+
     def test_dead_socket_is_not_treated_as_an_active_editor(self):
         address = str(self.runtime / "dead.sock")
         with socket.socket(socket.AF_UNIX) as server:
@@ -87,6 +104,7 @@ class RoutingTests(unittest.TestCase):
         ]:
             with self.subTest(file=file), \
                     patch("sys.argv", ["terminal-nvim", "open", file, *line]), \
+                    patch.dict(os.environ, {"NVIM": "/editor.sock"}), \
                     patch.object(routing, "editor_address", return_value="/editor.sock"), \
                     patch.object(routing, "nvr", return_value="9") as nvr, \
                     patch.object(routing, "run") as run:
@@ -95,6 +113,31 @@ class RoutingTests(unittest.TestCase):
                     "/editor.sock", "--remote", position, os.path.abspath(file),
                 ))
                 self.assertEqual(run.call_args.args[0][-2:], ["--match", "id:9"])
+
+    def test_open_starts_editor_split_when_tab_has_no_server(self):
+        with patch("sys.argv", ["terminal-nvim", "open", "new file.txt"]), \
+                patch.object(routing, "tab_socket", return_value="/tab.sock"), \
+                patch.object(routing, "is_listening", side_effect=[False, True]), \
+                patch.object(routing, "executable", return_value="/usr/bin/nvim"), \
+                patch.object(routing, "launch_split") as launch, \
+                patch.object(routing, "nvr", return_value="9") as nvr, \
+                patch.object(routing, "run"):
+            self.assertEqual(routing.main(), 0)
+        launch.assert_called_once_with("/usr/bin/nvim", "--listen", "/tab.sock")
+        self.assertEqual(nvr.call_args_list[0].args, (
+            "/tab.sock", "--remote", os.path.abspath("new file.txt"),
+        ))
+
+    def test_open_reports_editor_start_timeout(self):
+        with patch("sys.argv", ["terminal-nvim", "open", "file.txt"]), \
+                patch.object(routing, "tab_socket", return_value="/tab.sock"), \
+                patch.object(routing, "is_listening", return_value=False), \
+                patch.object(routing, "executable", return_value="/usr/bin/nvim"), \
+                patch.object(routing, "launch_split"), \
+                patch.object(routing.time, "monotonic", side_effect=[0, 11]), \
+                contextlib.redirect_stderr(io.StringIO()) as stderr:
+            self.assertEqual(routing.main(), 1)
+        self.assertIn("Neovim did not start listening at /tab.sock", stderr.getvalue())
 
     def test_wezterm_discovery_and_focus(self):
         os.environ.pop("KITTY_WINDOW_ID")

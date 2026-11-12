@@ -2,8 +2,10 @@ import argparse
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
+import time
 
 
 class RoutingError(Exception):
@@ -61,6 +63,28 @@ def nvr(address, *args):
     return run(["nvr", "--servername", address, "--nostart", *args])
 
 
+def executable(name):
+    path = shutil.which(name)
+    if not path:
+        raise RoutingError(f"{name} executable was not found in PATH")
+    return path
+
+
+def launch_split(*command):
+    if os.environ.get("KITTY_WINDOW_ID"):
+        return run([
+            "kitten", "@", "--to", kitty_endpoint(), "launch",
+            "--type=window", "--location=vsplit", "--cwd=current", *command,
+        ])
+    pane = os.environ.get("WEZTERM_PANE")
+    if pane:
+        return run([
+            "wezterm", "cli", "split-pane", "--right", "--pane-id", pane,
+            "--cwd", os.getcwd(), "--", *command,
+        ])
+    raise RoutingError("no Kitty or WezTerm pane is available")
+
+
 def is_listening(address):
     if not Path(address).is_socket():
         return False
@@ -68,6 +92,15 @@ def is_listening(address):
         return nvr(address, "--remote-expr", "1") == "1"
     except subprocess.CalledProcessError:
         return False
+
+
+def wait_for_editor(address):
+    deadline = time.monotonic() + 10
+    while time.monotonic() < deadline:
+        if is_listening(address):
+            return
+        time.sleep(0.1)
+    raise RoutingError(f"Neovim did not start listening at {address}")
 
 
 def editor_address():
@@ -114,7 +147,15 @@ def main():
         else:
             if args.line is not None and args.line < 1:
                 raise RoutingError("line number must be positive")
-            address = editor_address()
+            if os.environ.get("NVIM"):
+                address = editor_address()
+            elif os.environ.get("KITTY_WINDOW_ID") or os.environ.get("WEZTERM_PANE"):
+                address = tab_socket()
+                if not is_listening(address):
+                    launch_split(executable("nvim"), "--listen", address)
+                    wait_for_editor(address)
+            else:
+                address = editor_address()
             file = Path(os.path.abspath(args.file))
             position = ["+Oil"] if file.is_dir() else (
                 [f"+{args.line}"] if args.line is not None else []
