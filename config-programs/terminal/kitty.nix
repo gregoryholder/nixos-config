@@ -5,6 +5,7 @@ in
 {
   programs.kitty = {
     enable = true;
+    shellIntegration.enableZshIntegration = true;
     themeFile = "Catppuccin-Mocha";
     settings = {
       allow_remote_control = "socket-only";
@@ -23,8 +24,8 @@ in
     };
     keybindings = {
       "alt+shift+n" = "kitten smart_split.py";
-      "alt+shift+v" = "launch --location=vsplit --cwd=current";
-      "alt+shift+s" = "launch --location=hsplit --cwd=current";
+      "alt+shift+v" = "launch --location=vsplit --cwd=last_reported";
+      "alt+shift+s" = "launch --location=hsplit --cwd=last_reported";
       "alt+shift+t" = "new_tab_with_cwd";
       "alt+shift+d" = "close_window";
       "alt+shift+f" = "toggle_fullscreen";

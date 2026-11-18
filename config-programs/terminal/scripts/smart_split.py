@@ -15,7 +15,7 @@ def handle_result(args, answer, target_window_id, boss):
     location = "vsplit" if width > height * 1.5 else "hsplit"
     boss.launch(
         f"--location={location}",
-        "--cwd=current",
+        "--cwd=last_reported",
         f"--source-window=id:{window.id}",
         f"--next-to=id:{window.id}",
     )
