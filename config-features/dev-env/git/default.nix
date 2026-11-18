@@ -25,6 +25,7 @@
         postBuffer = "524288000";
       };
       "http \"http://ach-gitlab\"".proxy = "";
+      init.defaultBranch = "main";
       lfs.cachecredentials = true;
       "filter \"lfs\"" = {
         process = "git-lfs filter-process";
